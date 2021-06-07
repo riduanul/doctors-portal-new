@@ -1,0 +1,26 @@
+import React from 'react';
+import doctor from "../../../images/doctor.png";
+import "./MakeAppointment.css";
+
+const MakeAppointment = () => {
+    return (
+      <section className="make-appointment">
+           <div className="container mt-5">
+                <div className=' row '>
+                    <div className="col-md-6">
+                            <img src={doctor} alt="" />
+                    </div>
+            
+                    <div className="col-md-6">
+                        <h5 style={{color:"#12D0D9",paddingTop:"20px"}}>APPOINTMENT</h5>
+                        <h1 className="mt-5 mb-5 ">Make Appointment   Today </h1>
+                        <p className="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis quisquam corrupti modi, sapiente non aspernatur natus veniam ut.</p>
+                        <button className="btn btn-primary mt-5">Learn more</button>
+                    </div> 
+                </div>
+            </div>
+      </section>
+    );
+};
+
+export default MakeAppointment;

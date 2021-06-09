@@ -1,0 +1,9 @@
+.footer-img {
+  background-image: url("../../../images/footer-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-position: center; */
+  /* display: block; */
+  width: 100%;
+  height: 450px;
+}

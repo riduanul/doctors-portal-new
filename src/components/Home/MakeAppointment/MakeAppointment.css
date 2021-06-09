@@ -5,7 +5,6 @@
   background-size: cover;
   background-position: center center;
   height: 420px;
-  width: 100%;
 }
 
 .make-appointment::before {
@@ -15,7 +14,7 @@
   height: 100%;
   position: absolute;
   background: rgb(36, 41, 73);
-  opacity: 0.8;
+  opacity: 0.9;
   top: 0;
 }
 

@@ -4,7 +4,7 @@ import BusinessInfo from '../BusinessInfo/BusinessInfo';
 import Contact from '../Contact/Contact';
 import Doctors from '../Doctors/Doctors';
 import Exceptional from '../Exceptional/Exceptional';
-import Footer from '../Footer/Footer';
+import Footer from '../../Shared/Footer/Footer';
 import Header from '../Header/Header';
 import MakeAppointment from '../MakeAppointment/MakeAppointment';
 import Services from '../Services/Services';

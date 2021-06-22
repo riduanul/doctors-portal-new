@@ -46,7 +46,7 @@ const Footer = () => {
                         <br /><br /><br />
                         
                         <p>Call Now</p>
-                        <button className="btn btn-primary">+2025550295</button>
+                        <button className="btn btn-brand ">+2025550295</button>
                 </div>
                
             </div>

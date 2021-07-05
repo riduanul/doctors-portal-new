@@ -7,7 +7,7 @@ const Footer = () => {
             <div className="de-flex justify-content-center">
             <div className="row ">
                 <div className="col-md-3">
-                        <h4></h4>
+                        {/* <h4></h4> */}
                         <br /><br />
                         <p>Emergency Dental Care</p>
                         <p>Check Up</p>

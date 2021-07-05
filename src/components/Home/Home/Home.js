@@ -13,7 +13,7 @@ import TestimonialCard from '../TestimonialCard/TestimonialCard';
 
 const Home = () => {
     return (
-        <div>
+        <main>
             <Header></Header>
             <BusinessInfo></BusinessInfo>
             <Services></Services>
@@ -25,7 +25,7 @@ const Home = () => {
             <Doctors></Doctors>
             <Contact></Contact>
             <Footer></Footer>
-        </div>
+        </main>
     );
 };
 

@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 // default middlware
 app.use((error, req, res, next) => {
   if (res.headersSent) {
-    next("There was a problem!");
+    next("There was a headersent  problem!");
   } else {
     if (error.message) {
       res.status(500).send(error.message);

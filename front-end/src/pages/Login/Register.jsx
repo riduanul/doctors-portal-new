@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSignupMutation } from "../../features/user/userApi";
 
 const Register = () => {
-  const [signup, { data, isLoading, isError }] = useSignupMutation();
+  const [signup, { data, isLoading, error: responseError }] = useSignupMutation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -20,6 +20,20 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
+
+useEffect(()=>{
+  if(responseError?.data) {
+    setError(responseError.data);
+  }
+  if(data?.access_token && data?.newUser){
+    reset();
+    toast.success("Successfully Registered!", {
+      position: toast.POSITION.BOTTOM_LEFT,
+    });
+    navigate("/appointment");
+  }
+},[data, responseError])
+
   const handleSignup = async (data) => {
     const { name: username, email, password } = data;
     setLoading(true);
@@ -42,11 +56,7 @@ const Register = () => {
 
       setLoading(false);
       setError(false);
-      reset();
-      toast.success("Successfully Registered!", {
-        position: toast.POSITION.BOTTOM_LEFT,
-      });
-      navigate("/appointment");
+      
     } catch (error) {
       setError(error);
     }

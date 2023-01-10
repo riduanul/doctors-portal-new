@@ -1,6 +1,11 @@
 const Booking = require("../models/bookingModel");
 const mongoose = require("mongoose");
 
+
+
+
+
+
 //Get All Bookings
 const getBookings = async (req, res) => {
   const bookings = await Booking.find({});
@@ -8,6 +13,27 @@ const getBookings = async (req, res) => {
     bookings,
   });
 };
+
+// Get A Single Person's Booking
+const getPersonsBooking = async (req, res) => {
+  const email = req.query.email;
+  const authorization = req.headers.authorization;
+  console.log(authorization)
+  const query = { patientEmail: email };
+  const booking = await Booking.find(query);
+  if (booking) {
+    res.status(200).json({
+      booking
+    });
+  } else {
+    res.status(500).json({
+      error: "No such a booking Found!",
+    });
+  }
+};
+
+
+
 
 //Get A single Booking
 
@@ -31,21 +57,6 @@ const getBooking = async (req, res) => {
   }
 };
 
-// Get A Single Person's Booking
-const getPersonsBooking = async (req, res) => {
-  const email = req.query.email;
-  const query = { patientEmail: email };
-  const booking = await Booking.find(query);
-  if (!booking) {
-    res.status(500).json({
-      error: "No such a booking Found!",
-    });
-  } else {
-    res.status(200).json({
-      booking,
-    });
-  }
-};
 
 // Create a New Booking
 const createBooking = async (req, res) => {

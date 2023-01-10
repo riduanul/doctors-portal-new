@@ -1,19 +1,31 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const jwt = reqire("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 //SignUp User
 const signup = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newUser = new User({
+    const user = new User({
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
     });
-    newUser.save();
+    user.save();
+     // Generate Token
+     const token = jwt.sign(
+      {
+        userId: user._id,
+        username:user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
     res.status(200).json({
       message: "Signup was Successfull!",
+      access_token: token,
+      user: user,
     });
   } catch (err) {
     console.log(err);
@@ -28,7 +40,8 @@ const signup = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const user = await User.find({ email: req.body.email });
-    if (user) {
+   
+    if (user && user.length > 0) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
         user[0].password
@@ -37,25 +50,28 @@ const loginUser = async (req, res) => {
         // Generate Token
         const token = jwt.sign(
           {
-            userId: _id,
+            userId: user._id,
             username: user[0].username,
             email: user[0].email,
           },
           process.env.JWT_SECRET_KEY,
           { expiresIn: "1h" }
         );
+        currentUser = user[0]
+        console.log(currentUser)
         res.status(200).json({
+          currentUser,
           access_token: token,
           message: "Login Successfull!",
         });
       } else {
         res.status(401).json({
-          error: "Authentication Failed!",
+          error: "Authentication Failed! Password not valid!",
         });
       }
     } else {
       res.status(401).json({
-        error: "Authentication Failed!",
+        error: "Authentication Failed! User not Found!",
       });
     }
   } catch (err) {
@@ -76,9 +92,55 @@ const updateOrCreate = async (req, res) => {
     $set: user,
   };
   const result = await User.updateOne(filter, updateDoc, options);
+  // create jw token
+  const token = jwt.sign(
+    {
+      userId: user._id,
+      username: user.username,
+      email: user.email,
+    },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "1h" }
+  );
   res.status(200).json({
+    access_token: token,
     result,
   });
 };
 
-module.exports = { signup, loginUser, updateOrCreate };
+// Get All User
+const getUsers = async(req, res) => {
+  const users = await User.find({})
+  res.status(200).json({
+    users,
+  })
+}
+
+// Get A Single User
+const getUser = async(req, res) => {
+  const id = req.params.id
+  const user = await User.findById({_id:id })
+  res.status(200).json({
+    user,
+  })
+}
+
+// Get an Admin
+const getAdmin = async (req, res) => {
+  const email = req.params.email;
+  const query = {email}
+  const user = await User.findOne(query);
+ if(user){
+  res.status(200).json({
+    isAdmin: user?.role === 'admin'
+  })
+ }else{
+  res.status(401).json({
+    message: "Unauthorized!"
+  })
+ } 
+}
+
+
+
+module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, getAdmin };

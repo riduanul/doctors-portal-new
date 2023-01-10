@@ -15,11 +15,13 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import MyAppointments from "./pages/Dashboard/MyAppointments";
 import Reviews from "./pages/Dashboard/Reviews";
 import TreatmentHistory from "./pages/Dashboard/TreatmentHistory.jsx";
+import useAuthCheck from "./Hooks/useAuthCheck";
 
 function App() {
   const email = useSelector((state) => state.user.email);
+  const authChecked = useAuthCheck() 
   return (
-    <div>
+      !authChecked ? <div>Checking Authentication....</div> : <div>
       <BrowserRouter>
         <div className="max-w-7xl mx-auto">
           <Navbar />

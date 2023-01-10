@@ -3,6 +3,9 @@ const {
   signup,
   loginUser,
   updateOrCreate,
+  getUsers,
+  getUser,
+  getAdmin,
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -14,5 +17,14 @@ router.post("/login", loginUser);
 
 //Update or Create User
 router.post("/:email", updateOrCreate);
+
+// Get All Users
+router.get("/", getUsers);
+
+// Get a User
+router.get("/:id", getUser);
+
+// Get an admin
+router.get("/admin/:email", getAdmin);
 
 module.exports = router;

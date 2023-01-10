@@ -12,18 +12,21 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../features/services/userSlice";
 import Loading from "../shared/Loading.jsx";
-// import useToken from "../../Hooks/useToken";
+import { useLoginUserMutation, useUpdateUserMutation } from "../../features/user/userApi";
+
+
 
 const Login = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const location = useLocation();
-  const [user, setUser] = useState({});
-  // const [token] = useToken(user);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const [updateUser,{data, isloading, isError}] = useUpdateUserMutation()
+  const [loginUser, {data:loginUserData}] = useLoginUserMutation()
   let from = location.state?.from?.pathname || "/";
+  
   const {
     register,
     handleSubmit,
@@ -41,7 +44,8 @@ const Login = () => {
         password
       );
       const user = userCredential.user;
-
+        loginUser({email, password})
+           
       dispatch(
         setActiveUser({
           userName: user.displayName,
@@ -50,10 +54,12 @@ const Login = () => {
       );
 
       setLoading(false);
+      setError(false)
       navigate(from, { replace: true });
-    } catch (error) {
-      setError(error);
-      console.log(error.message);
+    } catch (err) {
+      setError(err)
+      console.log('setError:', error)
+      console.log(err.message);
     }
   };
 
@@ -69,7 +75,15 @@ const Login = () => {
             email: result.user.email,
           })
         );
-        setUser(result.user);
+    
+        const currentUser = {username:result.user.displayName, email: result.user.email}
+        const email = result.user.email
+          updateUser({email, currentUser })
+          const accessToken = result.user.accessToken
+          localStorage.setItem('accessToken', accessToken)
+          navigate(from, {replace: true})
+          
+      
       })
 
       .catch((err) => setError(err));

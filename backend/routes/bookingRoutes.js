@@ -9,14 +9,13 @@ const {
 } = require("../controllers/bookingConroller");
 const router = express.Router();
 
+
 // Get all Bookings
 router.get("/", getBookings);
 
-// Get a Booking
-router.get("/", getBooking);
-
 // Get a PersonsBooking
 router.get("/", getPersonsBooking);
+
 
 // Create a Booking
 router.post("/", createBooking);

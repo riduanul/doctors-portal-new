@@ -41,7 +41,7 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.find({ email: req.body.email });
    
-    if (user && user.length > 0) {
+    if (user) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
         user[0].password
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
           { expiresIn: "1h" }
         );
         currentUser = user[0]
-        console.log(currentUser)
+        
         res.status(200).json({
           currentUser,
           access_token: token,
@@ -126,21 +126,19 @@ const getUser = async(req, res) => {
 }
 
 // Get an Admin
-const getAdmin = async (req, res) => {
-  const email = req.params.email;
-  const query = {email}
-  const user = await User.findOne(query);
- if(user){
-  res.status(200).json({
-    isAdmin: user?.role === 'admin'
-  })
- }else{
-  res.status(401).json({
-    message: "Unauthorized!"
-  })
- } 
+const makeAdmin = async(req, res) => {
+  const id = req.params.id;
+  const filter = {_id : id}
+  const options = {upsert: true};
+  const updateDoc = {
+    $set: {
+      role: "admin",
+    }
+  }
+
+const result = await User.updateOne(filter, updateDoc, options);
+
+res.status(200).json({result, message:"Role Successfully Updated as an Admin"})
 }
 
-
-
-module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, getAdmin };
+module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, makeAdmin };

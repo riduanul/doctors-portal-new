@@ -6,6 +6,7 @@ const {
   getUsers,
   getUser,
   getAdmin,
+  makeAdmin,
 } = require("../controllers/userController");
 const router = express.Router();
 
@@ -25,6 +26,6 @@ router.get("/", getUsers);
 router.get("/:id", getUser);
 
 // Get an admin
-router.get("/admin/:email", getAdmin);
+router.get("/admin/:id", makeAdmin);
 
 module.exports = router;

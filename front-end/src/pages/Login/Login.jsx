@@ -58,7 +58,7 @@ const Login = () => {
       navigate(from, { replace: true });
     } catch (err) {
       setError(err)
-      console.log('setError:', error)
+  
       console.log(err.message);
     }
   };
@@ -171,11 +171,12 @@ const Login = () => {
               <Link to="/register" className="text-green-500 font-bold">
                 Register
               </Link>
+             
             </div>
-
-            {error && (
+                    <div> {error && (
               <p className="text-red-500 text-center">{error.message}</p>
-            )}
+            ) }</div>
+           
           </form>
           <div className="divider">OR</div>
           <button

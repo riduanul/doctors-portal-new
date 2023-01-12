@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 
 
 
-
 //Get All Bookings
 const getBookings = async (req, res) => {
   const bookings = await Booking.find({});
@@ -16,11 +15,15 @@ const getBookings = async (req, res) => {
 
 // Get A Single Person's Booking
 const getPersonsBooking = async (req, res) => {
-  const email = req.query.email;
-  const authorization = req.headers.authorization;
-  console.log(authorization)
+  const email = req.query.patientEmail;
+  console.log(email)
+  // const docodedEmail = req.decoded.email;
+  // console.log(docodedEmail)
+  // const authorization = req.headers.authorization;
+  // console.log(authorization)
   const query = { patientEmail: email };
-  const booking = await Booking.find(query);
+  const booking = await Booking.find({ patientEmail: email });
+ 
   if (booking) {
     res.status(200).json({
       booking
@@ -33,10 +36,7 @@ const getPersonsBooking = async (req, res) => {
 };
 
 
-
-
 //Get A single Booking
-
 const getBooking = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {

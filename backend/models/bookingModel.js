@@ -14,7 +14,7 @@ const bookingSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now,
-    trim: true,
+  
   },
   slot: {
     type: String,

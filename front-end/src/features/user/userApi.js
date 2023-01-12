@@ -57,6 +57,16 @@ export const userApi = apiSlice.injectEndpoints({
         body: currentUser,
       }),
     }),
+    allUsers: builder.query({
+      query:() => `/user`
+    }),
+    makeAdmin: builder.mutation({
+      query: (id) => ({
+        url: `/user/admin/${id}`,
+        method: "PUT",
+      
+      })
+    })
   }),
 });
 
@@ -64,4 +74,6 @@ export const {
   useSignupMutation,
   useLoginUserMutation,
   useUpdateUserMutation,
+  useMakeAdminMutation,
+  useAllUsersQuery,
 } = userApi;

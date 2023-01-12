@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 export const bookingApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getBookings: builder.query({
-      query: () => "/booking/",
+      query: () => "/booking",
     }),
     getBooking: builder.query({
       query: (email) => `/booking?patientEmail=${email}`,

@@ -27,6 +27,7 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
       .then((data) => {
         console.log(data);
         if (data.success) {
+          refetch();
           toast.success(`Appointment Is set, ${formatedDate} at ${slot}`, {
             position: "bottom-left",
           });
@@ -39,7 +40,7 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
           );
         }
       });
-    refetch();
+  
     setTreatment(null);
   };
 

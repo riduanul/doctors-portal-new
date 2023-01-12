@@ -1,4 +1,5 @@
 const express = require("express");
+const verifyJWT = require('../middlewares/verifyJWT')
 const {
   getBooking,
   getBookings,
@@ -10,11 +11,14 @@ const {
 const router = express.Router();
 
 
+
+// Get a PersonsBooking
+router.get("/",  getPersonsBooking);
+
+
 // Get all Bookings
 router.get("/", getBookings);
 
-// Get a PersonsBooking
-router.get("/", getPersonsBooking);
 
 
 // Create a Booking

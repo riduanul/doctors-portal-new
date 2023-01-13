@@ -5,9 +5,10 @@ const {
   updateOrCreate,
   getUsers,
   getUser,
-  getAdmin,
-  makeAdmin,
+makeAdmin,
+isAdmin,
 } = require("../controllers/userController");
+const verifyJWT = require('../middlewares/verifyJWT')
 const router = express.Router();
 
 //signup
@@ -20,12 +21,15 @@ router.post("/login", loginUser);
 router.post("/:email", updateOrCreate);
 
 // Get All Users
-router.get("/", getUsers);
+router.get("/", verifyJWT, getUsers);
 
 // Get a User
 router.get("/:id", getUser);
 
 // Get an admin
-router.get("/admin/:id", makeAdmin);
+router.put("/admin/:id", verifyJWT, makeAdmin);
+
+// Checking isAdmin
+router.get("/admin/:email", isAdmin);
 
 module.exports = router;

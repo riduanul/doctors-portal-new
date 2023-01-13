@@ -22,7 +22,7 @@ const MyAppointments = () => {
 
   return (
     <div>
-      <h2>My Appointments {data.booking.length}</h2>
+      <h2 className="text-center p-5 ">My Appointments {data.booking.length}</h2>
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>

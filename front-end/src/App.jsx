@@ -17,6 +17,8 @@ import Reviews from "./pages/Dashboard/Reviews";
 import TreatmentHistory from "./pages/Dashboard/TreatmentHistory.jsx";
 import useAuthCheck from "./Hooks/useAuthCheck";
 import AllUsers from "./pages/Dashboard/AllUsers";
+import AdminRoute from "../src/pages/AdminRoute/AdminRoute"
+import AddDoctor from "./pages/Dashboard/AddDoctor";
 
 function App() {
   const email = useSelector((state) => state.user.email);
@@ -46,8 +48,7 @@ function App() {
               }
             >
               <Route index element={<MyAppointments />} />
-              <Route path="reviews" element={<Reviews />} />
-              <Route path="history" element={<TreatmentHistory />} />
+              <Route path="adddoctor" element={<AddDoctor />} />
               <Route path="users" element={<AllUsers />} />
             </Route>
             <Route path="login" element={<Login />} />

@@ -16,13 +16,11 @@ const getBookings = async (req, res) => {
 // Get A Single Person's Booking
 const getPersonsBooking = async (req, res) => {
   const email = req.query.patientEmail;
-  console.log(email)
-  // const docodedEmail = req.decoded.email;
-  // console.log(docodedEmail)
-  // const authorization = req.headers.authorization;
-  // console.log(authorization)
-  const query = { patientEmail: email };
-  const booking = await Booking.find({ patientEmail: email });
+   const decodedEmail = req.decoded.email;
+  if(email !== decodedEmail){
+    return res.status(403).json({message: "forbidden access!"})
+  }
+ const booking = await Booking.find({ patientEmail: email });
  
   if (booking) {
     res.status(200).json({

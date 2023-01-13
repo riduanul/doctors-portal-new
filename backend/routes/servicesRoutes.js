@@ -6,12 +6,17 @@ const {
   deleteService,
   updateService,
   getAvailableServices,
+  appointmentSpeciality,
 } = require("../controllers/ServicesController");
 
 const router = express.Router();
 
 // Get all Services
 router.get("/", getServices);
+
+// Special appointment name
+router.get("/special", appointmentSpeciality);
+
 // Get Available services
 router.get("/available", getAvailableServices);
 
@@ -26,5 +31,6 @@ router.delete("/:id", deleteService);
 
 // Update a Service
 router.patch("/:id", updateService);
+
 
 module.exports = router;

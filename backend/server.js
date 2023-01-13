@@ -5,6 +5,7 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const userRoute = require("./routes/userRoute");
 const database = require("./database");
 const cors = require("cors");
+const errorHandler = require("./middlewares/errorHandler");
 //express app
 const app = express();
 dotenv.config();
@@ -27,17 +28,7 @@ app.use((req, res, next) => {
 });
 
 // default middlware
-app.use((error, req, res, next) => {
-  if (res.headersSent) {
-    next("There was a headersent  problem!");
-  } else {
-    if (error.message) {
-      res.status(500).send(error.message);
-    } else {
-      res.status(500).send("There was an error!");
-    }
-  }
-});
+app.use(errorHandler);
 
 // listen Port
 app.listen(process.env.PORT, () => {

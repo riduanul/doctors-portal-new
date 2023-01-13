@@ -110,6 +110,13 @@ const updateOrCreate = async (req, res) => {
 
 // Get All User
 const getUsers = async(req, res) => {
+  const decodedEmail = req.decoded.email;
+  const query = {email: decodedEmail};
+  const user = await User.find(query)
+  console.log(user)
+  if(user[0]?.role !== "admin"){
+    return res.status(403).json({users: [], message: "forbidden access!, You are not an admin!"})
+  }
   const users = await User.find({})
   res.status(200).json({
     users,
@@ -125,8 +132,14 @@ const getUser = async(req, res) => {
   })
 }
 
-// Get an Admin
+// make an Admin
 const makeAdmin = async(req, res) => {
+  const decodedEmail= req.decoded.email
+  const query = {email: decodedEmail}
+  const user = await User.findOne(query)
+  if(user.role !== 'admin'){
+    return res.status(403).json({message: "forbiden access!"})
+  }
   const id = req.params.id;
   const filter = {_id : id}
   const options = {upsert: true};
@@ -138,7 +151,26 @@ const makeAdmin = async(req, res) => {
 
 const result = await User.updateOne(filter, updateDoc, options);
 
-res.status(200).json({result, message:"Role Successfully Updated as an Admin"})
+if(result){
+  res.status(200).json({result, message:"Role Successfully Updated as an Admin"})
+} else {
+  res.statu(403).json({error:"Something wrong!"})
 }
 
-module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, makeAdmin };
+}
+
+const isAdmin = async(req, res) => {
+  const email = req.params.email;
+  const query = {email};
+  const user = await User.findOne(query);
+  res.status(200).json({
+    isAdmin: user?.role === 'admin'
+  })
+}
+
+const deleteUser = async(req, res) => {
+  const id = req.params.id
+  
+}
+
+module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, makeAdmin, isAdmin };

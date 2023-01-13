@@ -3,14 +3,17 @@ import { useUpdateUserMutation } from "../features/user/userApi";
 
 const useToken = (user) => {
   const [token, setToken] = useState("");
-  const [updateUser, { data, isLoading }] = useUpdateUserMutation();
+  
   useEffect(
     (user) => {
-      const username = user?.displayName;
       const email = user?.email;
-      const currentUser = { username, email };
       if (user) {
-        updateUser({ email, currentUser });
+        fetch(`http://localhost:5000/api/user/${email}`)
+            .then(res => res.json())
+            .then(data => {
+              
+                setToken(data.access_token)
+            })
       }
     },
     [user]

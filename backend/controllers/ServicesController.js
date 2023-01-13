@@ -8,6 +8,12 @@ const getServices = async (req, res) => {
     services,
   });
 };
+//Special Appointment Options
+const appointmentSpeciality = async(req, res) => {
+  const query = {}
+  const result = await Services.find(query).projection({ name: 1 });
+  res.status(200).json({result})
+}
 
 // Get a single Service
 const getService = async (req, res) => {
@@ -110,6 +116,8 @@ const updateService = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   createService,
   getServices,
@@ -117,4 +125,5 @@ module.exports = {
   deleteService,
   updateService,
   getAvailableServices,
+  appointmentSpeciality,
 };

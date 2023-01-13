@@ -13,7 +13,7 @@ const router = express.Router();
 
 
 // Get a PersonsBooking
-router.get("/",  getPersonsBooking);
+router.get("/", verifyJWT, getPersonsBooking);
 
 
 // Get all Bookings

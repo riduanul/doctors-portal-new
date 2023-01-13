@@ -64,8 +64,10 @@ export const userApi = apiSlice.injectEndpoints({
       query: (id) => ({
         url: `/user/admin/${id}`,
         method: "PUT",
-      
       })
+    }),
+    isAdmin: builder.query({
+      query: (email) => `/user/admin/${email}`
     })
   }),
 });
@@ -76,4 +78,5 @@ export const {
   useUpdateUserMutation,
   useMakeAdminMutation,
   useAllUsersQuery,
+  useIsAdminQuery,
 } = userApi;

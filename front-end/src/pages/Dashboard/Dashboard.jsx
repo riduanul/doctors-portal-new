@@ -2,11 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import useAdmin from "../../Hooks/useAdmin";
+import Loading from "../shared/Loading";
 
 const Dashboard = () => {
   const {email} = useSelector(state => state.user)
   
-  const [isAdmin] = useAdmin(email)
+  const [isAdmin, isLoading] = useAdmin(email)
+  if(isLoading) {
+    return <Loading/>
+  }
   return (
     <div className="mt-20">
       <div className="drawer drawer-mobile">
@@ -20,16 +24,21 @@ const Dashboard = () => {
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
           <ul className="menu p-4 w-48 bg-base-100 text-base-content">
-            {/* <!-- Sidebar content here --> */}
-            <li>
+          
+           {isAdmin ? ( <li>
+              <Link to="/dashboard">All Appointments</Link>
+            </li>) : (<li>
               <Link to="/dashboard">My Appointments</Link>
-            </li>
+            </li>)}
            
            {
             isAdmin &&
              <>
               <li>
                 <Link to="/dashboard/adddoctor">Add Doctor</Link>
+              </li>            
+              <li>
+                <Link to="/dashboard/doctors">Manage Doctors</Link>
               </li>            
               <li>
                 <Link to="/dashboard/users">All Users</Link>

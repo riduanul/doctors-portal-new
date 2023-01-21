@@ -1,13 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useAddBookingMutation, useGetBookingQuery } from "../../features/booking/bookingApiSlice";
+import { useAddBookingMutation, useGetBookingsQuery, useGetSingleBookingQuery } from "../../features/booking/bookingApiSlice";
 import { toast } from "react-toastify";
 
 const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
   const { id, name, slots } = treatment;
   const { email, userName } = useSelector((state) => state.user);
-  const [addBooking, { isSuccess, isError, error }] = useAddBookingMutation();
-  const {refetch:bookingRefetch} = useGetBookingQuery(email)
+  const [addBooking] = useAddBookingMutation();
+  const {refetch:bookingRefetch} = useGetSingleBookingQuery(email)
+  const {refetch:allBookingRefetch} = useGetBookingsQuery()
   const handleBooking = (event) => {
     event.preventDefault();
     const slot = event.target.slot.value;
@@ -29,6 +30,7 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
         if (data.success) {
           refetch();
           bookingRefetch();
+          allBookingRefetch();
           toast.success(`Appointment Is set, ${formatedDate} at ${slot}`, {
             position: "bottom-left",
           });

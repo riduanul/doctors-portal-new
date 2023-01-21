@@ -34,6 +34,9 @@ export const servicesApi = apiWithTag.injectEndpoints({
         method: "delete",
       }),
     }),
+    specialAppointment: builder.query({
+      query: () => `/services/special`
+    })
   }),
 });
 
@@ -44,4 +47,5 @@ export const {
   useAddServiceMutation,
   useDeleteServiceMutation,
   useUpdateServiceMutation,
+  useSpecialAppointmentQuery,
 } = servicesApi;

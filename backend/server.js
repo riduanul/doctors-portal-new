@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const servicesRoutes = require("./routes/servicesRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoute = require("./routes/userRoute");
+const doctorRoute = require("./routes/doctorRoutes");
 const database = require("./database");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/services", servicesRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/user", userRoute);
+app.use("/api/doctor", doctorRoute);
 
 //404 error handler
 app.use((req, res, next) => {

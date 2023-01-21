@@ -1,20 +1,21 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useGetBookingQuery } from "../../features/booking/bookingApiSlice";
+import { useGetSingleBookingQuery } from "../../features/booking/bookingApiSlice";
 import Loading from "../Shared/Loading";
 
 const MyAppointments = () => {
   const { email } = useSelector((state) => state.user);
-
-  const { data, isLoading, isError, error } = useGetBookingQuery(email);
+console.log(email)
+  const { data, isLoading, isError, error } = useGetSingleBookingQuery(email);
+console.log(data)
 
   if (isLoading) {
     return <Loading />;
   }
-  if (!isLoading && isError) {
-    return <p className="text-red-500 text-center">{error.message}</p>;
+  if (isError) {
+    return <p className="text-red-500 text-center bg-red-200 p-2">{error.data.message}</p>;
   }
-  if (!isLoading && !isError && data?.booking?.length === 0) {
+  if (data && data?.allBookings?.length === 0) {
     return (
       <p className="text-red-500 text-center mt-5 bg-red-200 p-3 ">User has no Booking!</p>
     );
@@ -22,7 +23,7 @@ const MyAppointments = () => {
 
   return (
     <div>
-      <h2 className="text-center p-5 ">My Appointments {data.booking.length}</h2>
+      <h2 className="text-center p-5 ">My Appointments </h2>
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
@@ -35,7 +36,7 @@ const MyAppointments = () => {
             </tr>
           </thead>
           <tbody>
-            {data.booking.map((a, index) => (
+            {data.allBookings.map((a, index) => (
               <tr key={index}>
                 <th>{index + 1}</th>
                 <td>{a.patientName}</td>

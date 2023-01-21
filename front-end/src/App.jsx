@@ -19,10 +19,17 @@ import useAuthCheck from "./Hooks/useAuthCheck";
 import AllUsers from "./pages/Dashboard/AllUsers";
 import AdminRoute from "../src/pages/AdminRoute/AdminRoute"
 import AddDoctor from "./pages/Dashboard/AddDoctor";
+import AllDoctors from "./pages/Dashboard/AllDoctors";
+import AllAppointments from "./pages/Dashboard/AllAppointments";
+import { useIsAdminQuery } from "./features/user/userApi";
+import Loading from "./pages/Shared/Loading";
+import useAdmin from "./Hooks/useAdmin";
 
 function App() {
   const email = useSelector((state) => state.user.email);
+
   const authChecked = useAuthCheck() 
+
   return (
       !authChecked ? <div>Checking Authentication....</div> : <div>
       <BrowserRouter>
@@ -47,7 +54,16 @@ function App() {
                 </RequireAuth>
               }
             >
-              <Route index element={<MyAppointments />} />
+             { 
+          // isAdmin === "true"
+          //    ?
+          //    ( <Route index element={<AllAppointments />} />)
+          //     :
+              (<Route index element={<MyAppointments />} />)
+              
+               
+             }
+              <Route path="doctors" element={<AllDoctors />} />
               <Route path="adddoctor" element={<AddDoctor />} />
               <Route path="users" element={<AllUsers />} />
             </Route>

@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAddDoctorMutation, useGetDoctorsQuery } from '../../features/doctor/doctorApi';
+import { useSpecialAppointmentQuery } from '../../features/services/apiSlice';
+import Loading from '../Shared/Loading'
+import { toast } from "react-toastify";
 
 const AddDoctor = () => {
     const [error, setError] = useState(false);
+    const {data:specialData, isLoading, isError, error:dataError} = useSpecialAppointmentQuery()
+    const [addDoctor, {data}] = useAddDoctorMutation()
+    const {refetch} = useGetDoctorsQuery()
     const {
         register,
         handleSubmit,
@@ -12,7 +19,35 @@ const AddDoctor = () => {
 
       const handleAddDoctor = (data) => {
         console.log(data)
+        const doctor = {
+        name : data.name,
+        email: data.email,
+        speciality: data.speciality
       }
+      addDoctor(doctor)
+      .unwrap()
+      .then(data => {
+        console.log(data)
+        refetch()
+        toast.success(`Doctor Successfully added !`, {
+          position: "bottom-left",
+        });
+       
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error(`${err.error}`, {
+          position: "bottom-left",
+        });
+      })
+      }
+      
+    if(isLoading){
+      return <Loading/>
+    }
+    if(isError){
+      return <div className='text-red-500 bg-red-200 text center'>{dataError.data.message}</div>
+    }
   return (
     <div className='w-97 p-7'>
         <form onSubmit={handleSubmit(handleAddDoctor)} className="w-full">
@@ -82,17 +117,18 @@ const AddDoctor = () => {
               <label className="label">
                 <span className="label-text">Speciality</span>
               </label>
-              <select className="select select-ghost w-full max-w-xs">
-                    <option disabled selected>Pick a speciality</option>
-                    <option>Cosmetic Dentist</option>
-                    <option>Teeth Orthodontics</option>
-                    <option>Root Canel</option>
+              <select 
+              {...register("speciality")}
+              className="input-bordered select select-ghost w-full max-w-xs">
+                    <option disabled >Please select speciality</option>
+                   {
+                    specialData.result.map(speciality => <option key={speciality._id}>{speciality.name}</option> )
+                   }
+                    
                 </select>
-              
-              
-            </div>
-            <input
-              className="btn btn-outline border border-primary  w-full max-w-xs hover:bg-primary hover:border-none"
+              </div>
+             <input
+              className="mt-2 btn btn-outline border border-primary  w-full max-w-xs hover:bg-primary hover:border-none"
               type="submit"
               value="Add Doctor"
             />

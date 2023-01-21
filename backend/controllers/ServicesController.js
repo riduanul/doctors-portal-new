@@ -9,9 +9,9 @@ const getServices = async (req, res) => {
   });
 };
 //Special Appointment Options
-const appointmentSpeciality = async(req, res) => {
+const appointmentSpeciality = async(req, res)=> {
   const query = {}
-  const result = await Services.find(query).projection({ name: 1 });
+  const result = await Services.find(query).select('name').skip({id:0});
   res.status(200).json({result})
 }
 

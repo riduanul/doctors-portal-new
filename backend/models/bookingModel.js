@@ -13,7 +13,7 @@ const bookingSchema = new Schema({
   date: {
     type: Date,
     required: true,
-    default: Date.now,
+    default: {currentTime: () => Math.floor(Date.now() / 1000)},
   
   },
   slot: {

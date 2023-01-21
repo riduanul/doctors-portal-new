@@ -43,38 +43,32 @@ const [adminError, setAdminError] = useState('')
     if(data && data.users.length > 0){
       return  content =   
       <div> 
-        
         <h2 className='text-center text-2xl p-3'>All Users</h2>
         <table className="table table-zebra w-full ">
-
-            <tr className='text-purple-600 '>
-            
+            <thead>
+              <tr className='text-purple-600 '>
                     <th>Sl</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th></th>
-                    <th></th>
+                    <th>Admin</th>
+                    <th>Delete</th>
+              </tr>
+            </thead>
 
-            
-            </tr>
             <tbody>
             {data.users.map((u, i) => 
-        
-      
-               
-                    <tr key={i}>
+                      <tr key={i}>
                             <td>{i+1} </td>
                             <td>{u.username}</td>
                             <td>{u.email}</td>
                             <td>{u.role}</td>
                             <td>{ u.role !== 'admin' && <button className='btn btn-primary btn-xs py-1 px-1 ' onClick={()=> handleMakeAdmin(u._id)}>Make Admin</button>}</td>
                             <td><button className="bg-red-500 btn-xs hover:bg-red-700 text-white py-1 px-1 rounded-full">Delete</button></td>
-                    </tr>
-                
-                
-                
-             )}</tbody></table>
+                      </tr>
+              )}
+              </tbody>
+             </table>
         </div>  
     }
 

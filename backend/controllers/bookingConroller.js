@@ -4,56 +4,36 @@ const mongoose = require("mongoose");
 
 
 
-
 //Get All Bookings
-const getBookings = async (req, res) => {
-  const bookings = await Booking.find({});
+const getAllBookings = async (req, res) => {
+
+  const allBookings = await Booking.find({});
   res.status(200).json({
-    bookings,
+    allBookings,
   });
 };
 
+
 // Get A Single Person's Booking
 const getPersonsBooking = async (req, res) => {
-  const email = req.query.patientEmail;
-   const decodedEmail = req.decoded.email;
+  const email = req.query.email;
+  const decodedEmail = req.decoded.email;
   if(email !== decodedEmail){
     return res.status(403).json({message: "forbidden access!"})
   }
- const booking = await Booking.find({ patientEmail: email });
- 
+  const booking = await Booking.find({ patientEmail: decodedEmail });
+  
   if (booking) {
-    res.status(200).json({
-      booking
-    });
-  } else {
-    res.status(500).json({
-      error: "No such a booking Found!",
-    });
-  }
-};
-
-
-//Get A single Booking
-const getBooking = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(404).json({
-      error: "Invalid Id",
-    });
-  }
-
-  const booking = await Booking.findById(id);
-  if (!booking) {
-    res.status(500).json({
-      error: "No such a booking Found!",
-    });
-  } else {
     res.status(200).json({
       booking,
     });
+  } else {
+    res.status(500).json({
+      error: "No such a booking Found!",
+    });
   }
 };
+
 
 
 // Create a New Booking
@@ -105,27 +85,6 @@ const createBooking = async (req, res) => {
   }
 };
 
-// Delate a Booking
-
-const deleteBooking = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(404).json({
-      message: "Invalid Id",
-    });
-  }
-
-  const booking = await Booking.findOneAndDelete({ _id: id });
-  if (booking) {
-    res.status(200).json({
-      memssage: "Successfully Delated!",
-    });
-  } else {
-    res.status(400).json({
-      error: "No such a Booking!",
-    });
-  }
-};
 
 // Update a Booking
 
@@ -154,9 +113,30 @@ const updateBooking = async (req, res) => {
   }
 };
 
+// Delate a Booking
+
+const deleteBooking = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({
+      message: "Invalid Id",
+    });
+  }
+
+  const booking = await Booking.findOneAndDelete({ _id: id });
+  if (booking) {
+    res.status(200).json({
+      memssage: "Successfully Delated!",
+    });
+  } else {
+    res.status(400).json({
+      error: "No such a Booking!",
+    });
+  }
+};
+
 module.exports = {
-  getBooking,
-  getBookings,
+  getAllBookings,
   getPersonsBooking,
   createBooking,
   deleteBooking,

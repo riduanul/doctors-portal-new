@@ -113,7 +113,7 @@ const getUsers = async(req, res) => {
   const decodedEmail = req.decoded.email;
   const query = {email: decodedEmail};
   const user = await User.find(query)
-  console.log(user)
+  
   if(user[0]?.role !== "admin"){
     return res.status(403).json({users: [], message: "forbidden access!, You are not an admin!"})
   }

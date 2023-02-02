@@ -4,7 +4,7 @@
   "description": "a doctor's appointment taking web app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "keywords": [],

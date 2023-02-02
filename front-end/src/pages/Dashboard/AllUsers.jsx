@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { useAllUsersQuery, useMakeAdminMutation } from '../../features/user/userApi';
+import { useAllUsersQuery, useDeleteUserMutation, useMakeAdminMutation } from '../../features/user/userApi';
 import Loading from '../Shared/Loading';
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ const AllUsers = () => {
 const [adminError, setAdminError] = useState('')
 
   const {data, isLoading, isError, error, refetch} = useAllUsersQuery()
-
+  const [deleteUser] = useDeleteUserMutation()
   const [makeAdmin, {}] = useMakeAdminMutation()
    
   const handleMakeAdmin = id => {
@@ -28,6 +28,25 @@ const [adminError, setAdminError] = useState('')
           console.log(err)
         })
         
+    }
+
+    const handleDeleteUser = (id) => {
+      deleteUser(id)
+      .unwrap()
+      .then(data => {
+        console.log(data)
+        toast.success('User Successfully Delleted!', {
+          position: "bottom-left",
+        });
+        refetch()
+      })
+      .catch(err => {
+        console.log(data)
+        toast.error(`${err.data.message}`, {
+          position: "bottom-left",
+        });
+        
+      })
     }
 
     let content;
@@ -64,7 +83,7 @@ const [adminError, setAdminError] = useState('')
                             <td>{u.email}</td>
                             <td>{u.role}</td>
                             <td>{ u.role !== 'admin' && <button className='btn btn-primary btn-xs py-1 px-1 ' onClick={()=> handleMakeAdmin(u._id)}>Make Admin</button>}</td>
-                            <td><button className="bg-red-500 btn-xs hover:bg-red-700 text-white py-1 px-1 rounded-full">Delete</button></td>
+                            <td><button onClick={()=>handleDeleteUser(u._id)} className="bg-red-500 btn-xs hover:bg-red-700 text-white py-1 px-1 rounded-full">Delete</button></td>
                       </tr>
               )}
               </tbody>

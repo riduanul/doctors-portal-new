@@ -2,12 +2,6 @@ import { apiSlice } from "../api/apiSlice";
 
 export const bookingApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getBookings: builder.query({
-      query: () => "/booking",
-    }),
-    getSingleBooking: builder.query({
-      query: (email) => `/booking?patientEmail=${email}`,
-    }),
     addBooking: builder.mutation({
       query: (data) => ({
         url: "/booking",
@@ -15,8 +9,17 @@ export const bookingApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getBookings: builder.query({
+      query: () => "/booking",
+    }),
+    getABooking: builder.query({
+      query: (id) => `/booking/${id}`
+    }),
+    getSingleBooking: builder.query({
+      query: (email) => `/booking/single?patientEmail=${email}`,
+    }),
     updateBooking: builder.mutation({
-      query: ({ id, data }) => ({
+      query: (id, data ) => ({
         url: `/booking/${id}`,
         method: "PUT",
         body: data,
@@ -28,13 +31,22 @@ export const bookingApi = apiSlice.injectEndpoints({
         method: "delete",
       }),
     }),
+   statusUpdate: builder.mutation({
+    query:( id, status) => ({
+    url: `/booking/updateStatus/${id}`,
+    method:"PUT",
+    body: status   
+    })
+   })
   }),
 });
 
 export const {
   useGetBookingsQuery,
   useGetSingleBookingQuery,
+  useGetABookingQuery,
   useAddBookingMutation,
   useUpdateBookingMutation,
   useDeleteBookingMutation,
+  useStatusUpdateMutation
 } = bookingApi;

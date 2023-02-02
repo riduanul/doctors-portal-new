@@ -3,23 +3,32 @@ import { useSelector } from "react-redux";
 import { useGetSingleBookingQuery } from "../../features/booking/bookingApiSlice";
 import Loading from "../Shared/Loading";
 
+
 const MyAppointments = () => {
   const { email } = useSelector((state) => state.user);
-console.log(email)
+
   const { data, isLoading, isError, error } = useGetSingleBookingQuery(email);
-console.log(data)
+
 
   if (isLoading) {
     return <Loading />;
   }
   if (isError) {
-    return <p className="text-red-500 text-center bg-red-200 p-2">{error.data.message}</p>;
+    return <p className="text-red-500 text-center bg-red-200 p-2">{error.message}</p>;
   }
-  if (data && data?.allBookings?.length === 0) {
+  if (data && data?.booking?.length === 0) {
+    
     return (
       <p className="text-red-500 text-center mt-5 bg-red-200 p-3 ">User has no Booking!</p>
     );
   }
+
+  // useEffect(()=>{
+  //   fetch(`http://localhost:5000/api/booking/single?patientEmail=${email}`)
+  //   .then(res => res.json() )
+  //   .then(data => console.log(data))
+  //   .catch(err => console.log(err))
+  // },[])
 
   return (
     <div>
@@ -33,16 +42,22 @@ console.log(data)
               <th>Date</th>
               <th>Time</th>
               <th>Treatment</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data.allBookings.map((a, index) => (
+            {data?.booking?.map((a, index) => (
               <tr key={index}>
                 <th>{index + 1}</th>
                 <td>{a.patientName}</td>
                 <td>{a.date}</td>
                 <td>{a.slot}</td>
                 <td>{a.treatmentType}</td>
+                <td className={`text-${a.status === 'pending' ? 'red-400' : a.status === 'success' ? 'green-400' : 'yellow-400'}`}>{a.status}</td>
+                <td>
+                  <button className="btn btn-sm btn-primary">Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>

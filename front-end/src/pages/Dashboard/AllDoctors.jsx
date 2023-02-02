@@ -19,11 +19,16 @@ const [deletingDoctor, setDeletingDoctor] = useState(null)
     .unwrap()
     .then(data => {
       refetch()
-      toast.success(`Doctor Successfully Deleted !`, {
+      toast.success(`${doctor.name} Successfully Deleted !`, {
         position: "bottom-left",
       });
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      toast.error(`${err.data.message}`, {
+        position: "bottom-left",
+      });
+    })
   }
    
    let content;

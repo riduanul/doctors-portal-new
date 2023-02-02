@@ -7,9 +7,15 @@ const {
   updateService,
   getAvailableServices,
   appointmentSpeciality,
+  tempUpdate,
 } = require("../controllers/ServicesController");
 
 const router = express.Router();
+
+
+
+//Temporary UPdate
+router.get("/tempUpdate", tempUpdate)
 
 // Get all Services
 router.get("/", getServices);

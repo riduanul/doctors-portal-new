@@ -4,7 +4,7 @@ import { useAddBookingMutation, useGetBookingsQuery, useGetSingleBookingQuery } 
 import { toast } from "react-toastify";
 
 const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
-  const { id, name, slots } = treatment;
+  const { id, name, slots, price } = treatment;
   const { email, userName } = useSelector((state) => state.user);
   const [addBooking] = useAddBookingMutation();
   const {refetch:bookingRefetch} = useGetSingleBookingQuery(email)
@@ -13,11 +13,13 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
     event.preventDefault();
     const slot = event.target.slot.value;
     const formatedDate = format(date, "PP");
+  
     const bookingData = {
       treatmentId: id,
       treatmentType: name,
       date: formatedDate,
       slot,
+      price,
       patientEmail: email,
       patientName: userName,
       phoneNumber: event.target.phone.value,
@@ -34,6 +36,8 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
           toast.success(`Appointment Is set, ${formatedDate} at ${slot}`, {
             position: "bottom-left",
           });
+         
+          
         } else {
           toast.error(
             `You already have an appointment, ${formatedDate} at ${slot}`,
@@ -93,7 +97,7 @@ const BookingModal = ({ treatment, date, format, setTreatment, refetch }) => {
               className="input input-bordered w-full max-w-xs"
             />
             <input
-              type="text"
+              type="number"
               name="phone"
               placeholder="Phone Number"
               className="input input-bordered w-full max-w-xs"

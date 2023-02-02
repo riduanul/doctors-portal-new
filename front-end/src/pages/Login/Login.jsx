@@ -44,6 +44,7 @@ const Login = () => {
         password
       );
       const user = userCredential.user;
+     
         loginUser({email, password})
            
       dispatch(
@@ -54,13 +55,12 @@ const Login = () => {
       );
 
       setLoading(false);
-      setError(false)
+      
       navigate(from, { replace: true });
     } catch (err) {
+      setLoading(false)
       setError(err)
-  
-      console.log(err.message);
-    }
+     }
   };
 
   //google Signin
@@ -174,7 +174,7 @@ const Login = () => {
              
             </div>
                     <div> {error && (
-              <p className="text-red-500 text-center">{error.message}</p>
+              <p className="text-red-500 text-center">{error.message.substring(0, 45)}</p>
             ) }</div>
            
           </form>

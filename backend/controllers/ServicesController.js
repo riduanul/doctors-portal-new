@@ -1,5 +1,6 @@
 const Services = require("../models/servicesModel");
 const mongoose = require("mongoose");
+
 const Booking = require("../models/bookingModel");
 // get All Services
 const getServices = async (req, res) => {
@@ -116,6 +117,19 @@ const updateService = async (req, res) => {
   }
 };
 
+//Temporari field update
+const tempUpdate = async(req, res) => {
+  const filter = {}
+ options= {upsert: true}
+  const updateDoc = {
+    $set: {
+      price: 99
+    }
+  }
+  const result = await Services.updateMany(filter, updateDoc, options);
+  res.send(result);
+}
+
 
 
 module.exports = {
@@ -126,4 +140,5 @@ module.exports = {
   updateService,
   getAvailableServices,
   appointmentSpeciality,
+  tempUpdate,
 };

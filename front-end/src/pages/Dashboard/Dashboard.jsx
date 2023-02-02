@@ -5,9 +5,11 @@ import useAdmin from "../../Hooks/useAdmin";
 import Loading from "../shared/Loading";
 
 const Dashboard = () => {
+ 
   const {email} = useSelector(state => state.user)
-  
+
   const [isAdmin, isLoading] = useAdmin(email)
+
   if(isLoading) {
     return <Loading/>
   }
@@ -23,25 +25,34 @@ const Dashboard = () => {
         </div>
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-48 bg-base-100 text-base-content">
+          <ul className="menu p-4 w-48  text-base-content">
           
-           {isAdmin ? ( <li>
-              <Link to="/dashboard">All Appointments</Link>
-            </li>) : (<li>
-              <Link to="/dashboard">My Appointments</Link>
-            </li>)}
+      
+            {
+              !isAdmin && 
+              <>
+              <li><Link to='/dashboard'>Dashboard</Link></li>
+            <li><Link to="/dashboard/myAppointments">My Appointments</Link>
+        </li>
+              </>
+            }
+         
            
            {
             isAdmin &&
              <>
+              <li><Link to='/dashboard'>Dashboard</Link></li>
               <li>
-                <Link to="/dashboard/adddoctor">Add Doctor</Link>
-              </li>            
+              <Link to="/dashboard/allAppointments">All Appointments</Link>
+            </li>  
               <li>
                 <Link to="/dashboard/doctors">Manage Doctors</Link>
               </li>            
               <li>
                 <Link to="/dashboard/users">All Users</Link>
+              </li>            
+              <li>
+                <Link to="/dashboard/adddoctor">Add Doctor</Link>
               </li>            
             </>
            }

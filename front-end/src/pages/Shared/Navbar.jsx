@@ -16,6 +16,7 @@ const Navbar = () => {
     signOut(auth)
       .then(() =>{
         localStorage.removeItem('accessToken');
+        sessionStorage.removeItem('accessToken');
         dispatch(setUserLogOutState())})
       .catch((err) => console.log(err.message));
     navigate("/");

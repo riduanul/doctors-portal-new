@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAddDoctorMutation, useGetDoctorsQuery } from '../../features/doctor/doctorApi';
 import { useSpecialAppointmentQuery } from '../../features/services/apiSlice';
 import Loading from '../Shared/Loading'
@@ -10,6 +10,7 @@ const AddDoctor = () => {
     const [error, setError] = useState(false);
     const {data:specialData, isLoading, isError, error:dataError} = useSpecialAppointmentQuery()
     const [addDoctor, {data}] = useAddDoctorMutation()
+    const navigate = useNavigate()
     const {refetch} = useGetDoctorsQuery()
     const {
         register,
@@ -32,7 +33,7 @@ const AddDoctor = () => {
         toast.success(`Doctor Successfully added !`, {
           position: "bottom-left",
         });
-       
+       navigate("/dashboard/doctors")
       })
       .catch(err => {
         console.log(err)

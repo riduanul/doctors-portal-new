@@ -12,22 +12,17 @@ import RequireAuth from "./pages/Login/RequireAuth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import DashboardInfo from './pages/Dashboard/DashboardInfo';
 import MyAppointments from "./pages/Dashboard/MyAppointments";
-import Reviews from "./pages/Dashboard/Reviews";
-import TreatmentHistory from "./pages/Dashboard/TreatmentHistory.jsx";
 import useAuthCheck from "./Hooks/useAuthCheck";
 import AllUsers from "./pages/Dashboard/AllUsers";
-import AdminRoute from "../src/pages/AdminRoute/AdminRoute"
-import AddDoctor from "./pages/Dashboard/AddDoctor";
 import AllDoctors from "./pages/Dashboard/AllDoctors";
+import AddDoctor from "./pages/Dashboard/AddDoctor";
 import AllAppointments from "./pages/Dashboard/AllAppointments";
-import { useIsAdminQuery } from "./features/user/userApi";
-import Loading from "./pages/Shared/Loading";
-import useAdmin from "./Hooks/useAdmin";
+
+
 
 function App() {
-  const email = useSelector((state) => state.user.email);
-
   const authChecked = useAuthCheck() 
 
   return (
@@ -54,21 +49,18 @@ function App() {
                 </RequireAuth>
               }
             >
-             { 
-          // isAdmin === "true"
-          //    ?
-          //    ( <Route index element={<AllAppointments />} />)
-          //     :
-              (<Route index element={<MyAppointments />} />)
+              <Route index element={<DashboardInfo/>}/>
+              <Route path="myAppointments" element={<MyAppointments />} />
               
-               
-             }
+              <Route path="allAppointments" element={<AllAppointments />} />
               <Route path="doctors" element={<AllDoctors />} />
               <Route path="adddoctor" element={<AddDoctor />} />
               <Route path="users" element={<AllUsers />} />
+              
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            
           </Routes>
           <Footer />
           <ToastContainer />

@@ -40,6 +40,11 @@ export const userApi = apiSlice.injectEndpoints({
             token: result?.data?.access_token,
             user:result?.data?.user
           }))
+          sessionStorage.setItem("accessToken", JSON.stringify({
+            token: result?.data?.access_token,
+            user:result?.data?.user
+          }))
+          
 
           dispatch(userLoggedIn({
             access_token: result?.data?.access_token,
@@ -68,6 +73,12 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     isAdmin: builder.query({
       query: (email) => `/user/admin/${email}`
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method:"DELETE"
+      })
     })
   }),
 });
@@ -79,4 +90,5 @@ export const {
   useMakeAdminMutation,
   useAllUsersQuery,
   useIsAdminQuery,
+  useDeleteUserMutation,
 } = userApi;

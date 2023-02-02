@@ -1,7 +1,7 @@
 import React from "react";
 import PrimaryButton from "../Shared/PrimaryButton";
 const ServiceAppointment = ({ service, setTreatment }) => {
-  const { name, slots } = service;
+  const { name, slots, price } = service;
   return (
     <div className="card lg:max-w-lg bg-base-100 shadow-xl text-center">
       <div className="card-body">
@@ -18,6 +18,7 @@ const ServiceAppointment = ({ service, setTreatment }) => {
         <p>
           {slots.length} {slots.length > 1 ? "spaces" : "space"} available
         </p>
+        <small>Price: $ {price}</small>
         <div className="card-actions justify-center">
           <label
             htmlFor="booking-modal"

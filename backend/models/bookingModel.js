@@ -11,9 +11,9 @@ const bookingSchema = new Schema({
     trim: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
-    default: {currentTime: () => Math.floor(Date.now() / 1000)},
+    
   
   },
   slot: {
@@ -34,6 +34,14 @@ const bookingSchema = new Schema({
     type: Number,
     required: true,
   },
+  status:{
+    type: String,
+    enum: ["pending", "done", "ongoing"],
+    default:"pending"
+  }
+ 
 });
+
+
 
 module.exports = mongoose.model("Booking", bookingSchema);

@@ -7,7 +7,9 @@ const {
   getUser,
 makeAdmin,
 isAdmin,
+deleteUser,
 } = require("../controllers/userController");
+const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require('../middlewares/verifyJWT')
 const router = express.Router();
 
@@ -21,15 +23,19 @@ router.post("/login", loginUser);
 router.post("/:email", updateOrCreate);
 
 // Get All Users
-router.get("/", verifyJWT, getUsers);
+router.get("/", verifyJWT, verifyAdmin, getUsers);
 
 // Get a User
 router.get("/:id", getUser);
 
 // Get an admin
-router.put("/admin/:id", verifyJWT, makeAdmin);
+router.put("/admin/:id", verifyJWT, verifyAdmin, makeAdmin);
 
 // Checking isAdmin
 router.get("/admin/:email", isAdmin);
+
+// Delete User
+router.delete('/:id', verifyJWT, verifyAdmin, deleteUser )
+
 
 module.exports = router;

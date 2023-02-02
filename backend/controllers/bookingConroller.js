@@ -1,50 +1,20 @@
 const Booking = require("../models/bookingModel");
+const User = require('../models/userModel')
 const mongoose = require("mongoose");
 
-
-
-
-//Get All Bookings
-const getAllBookings = async (req, res) => {
-
-  const allBookings = await Booking.find({});
-  res.status(200).json({
-    allBookings,
-  });
-};
-
-
-// Get A Single Person's Booking
-const getPersonsBooking = async (req, res) => {
-  const email = req.query.email;
-  const decodedEmail = req.decoded.email;
-  if(email !== decodedEmail){
-    return res.status(403).json({message: "forbidden access!"})
-  }
-  const booking = await Booking.find({ patientEmail: decodedEmail });
-  
-  if (booking) {
-    res.status(200).json({
-      booking,
-    });
-  } else {
-    res.status(500).json({
-      error: "No such a booking Found!",
-    });
-  }
-};
-
+const stripe = require("stripe")(process.env.STRIPE_SK);
 
 
 // Create a New Booking
 const createBooking = async (req, res) => {
   const { bookingData } = req.body;
-
+console.log(bookingData)
   const {
     treatmentId,
     treatmentType,
     date,
     slot,
+    price,
     patientEmail,
     patientName,
     phoneNumber,
@@ -70,6 +40,7 @@ const createBooking = async (req, res) => {
       treatmentType,
       date,
       slot,
+      price,
       patientEmail,
       patientName,
       phoneNumber,
@@ -85,36 +56,52 @@ const createBooking = async (req, res) => {
   }
 };
 
+//Get All Bookings
+const getAllBookings = async (req, res) => {
 
-// Update a Booking
-
-const updateBooking = async (req, res) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(404).json({
-      error: "Invalid Id",
-    });
-  }
-  const booking = await Booking.findByIdAndUpdate(
-    {
-      _id: id,
-    },
-    { ...req.body }
-  );
-  if (booking) {
-    res.status(200).json({
-      message: "Successfully Updated!",
-    });
-  } else {
-    res.status(400).json({
-      error: "No such a Booking!",
-    });
-  }
+  const allBookings = await Booking.find({});
+  res.status(200).json({
+    allBookings,
+  });
 };
 
-// Delate a Booking
 
+// Get a booking
+const getABooking = async(req, res) => {
+  const id = req.params.id;
+  const query = {_id: id};
+  const result = await Booking.findOne(query)
+ if(result){
+  res.status(200).json({
+    result
+  })
+ }else {
+  res.status(500).json({
+    message: "no such a booking!"
+  })
+ }
+}
+
+
+// Get A Single 's Booking
+const getPersonsBooking = async (req, res) => {
+  const email = req.query.email;
+  console.log(email)
+  // const decodedEmail = req.decoded.email;
+  // if(email !== decodedEmail){
+  //   return res.status(403).json({message: "forbidden access!"})
+  // }
+  const booking = await Booking.find({ patientEmail: email });
+  
+  res.status(200).json({
+      booking,
+    });
+ 
+};
+
+
+
+// Delete a Booking
 const deleteBooking = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -129,16 +116,66 @@ const deleteBooking = async (req, res) => {
       memssage: "Successfully Delated!",
     });
   } else {
-    res.status(400).json({
+    res.status(500).json({
       error: "No such a Booking!",
     });
   }
 };
 
+// //Stripe Payment
+// const paymentWithStripe = async(req, res) => {
+//   const price = req.body.price;
+  
+//   const amount = price * 100;
+//   // Create a PaymentIntent with the order amount and currency
+//   const paymentIntent = await stripe.paymentIntents.create({
+//     currency: "usd",
+//     amount:amount,
+//     "payment_method_types":[
+//       "card"
+//     ]
+
+//   })
+//   res.status(200).json({
+//     clientSecret: paymentIntent.client_secret,
+//   }) 
+// }
+
+
+
+// update Status
+
+const statusUpdate = async(req, res) => {
+ 
+  const status = req.body.status;
+
+  const id = req.params.id;
+  
+  const filter = {_id : id}
+  const options = {upsert: true};
+  const updateDoc = {
+    $set: {
+      status: status,
+    }
+  }
+
+const result = await Booking.updateOne(filter, updateDoc, options);
+
+if(result){
+  res.status(200).json({result, message:"Status Successfully Updated as an Admin"})
+} else {
+  res.statu(403).json({error:"Something wrong!"})
+}
+
+}
+
 module.exports = {
-  getAllBookings,
-  getPersonsBooking,
   createBooking,
+  getAllBookings,
+  getABooking,
+  getPersonsBooking,
+  statusUpdate,
   deleteBooking,
-  updateBooking,
+  
 };
+

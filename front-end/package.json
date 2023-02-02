@@ -22,9 +22,19 @@
 
     "@reduxjs/toolkit": "^1.9.0",
 
+    "@stripe/react-stripe-js": "^1.16.4",
+
+    "@stripe/stripe-js": "^1.46.0",
+
+    "axios": "^1.2.3",
+
     "daisyui": "^2.42.1",
 
     "date-fns": "^2.29.3",
+
+    "dotenv": "^16.0.3",
+
+    "dotenv-expand": "^10.0.0",
 
     "firebase": "^9.15.0",
 
@@ -41,6 +51,8 @@
     "react-redux": "^8.0.5",
 
     "react-router-dom": "^6.4.3",
+
+    "react-select": "^5.7.0",
 
     "react-toastify": "^9.1.1",
 

@@ -10,6 +10,7 @@ import Loading from "../Shared/Loading";
 const AvailableAppointmets = ({ date, format }) => {
   const [treatment, setTreatment] = useState(null);
   const formatedDate = format(date, "PP");
+  
   const { data, isLoading, error, refetch } =
     useGetAvailableServicesQuery(formatedDate);
 

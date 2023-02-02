@@ -40,7 +40,7 @@ const signup = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const user = await User.find({ email: req.body.email });
-   
+
     if (user) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
@@ -77,7 +77,7 @@ const loginUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(401).json({
-      error: "Authentication Failed!",
+      error: "Authentication Failed!, User Not Found!",
     });
   }
 };
@@ -170,7 +170,22 @@ const isAdmin = async(req, res) => {
 
 const deleteUser = async(req, res) => {
   const id = req.params.id
+  const query = {_id: id};
+  const result = await User.deleteOne(query)
+  res.status(200).json({
+    message: "deleted Successfully!",
+    result
+  })
   
 }
 
-module.exports = { signup, loginUser, updateOrCreate, getUsers, getUser, makeAdmin, isAdmin };
+module.exports = { 
+  signup,
+  loginUser,
+  updateOrCreate,
+  getUsers,
+  getUser,
+  makeAdmin,
+  isAdmin,
+  deleteUser,
+};

@@ -12,6 +12,7 @@ const {
   paymentWithStripe,
   statusUpdate,
 } = require("../controllers/bookingConroller");
+const { verify } = require("jsonwebtoken");
 const router = express.Router();
 
 
@@ -27,7 +28,7 @@ router.get("/", verifyJWT, getAllBookings);
 // router.get("/:id", getABooking)
 
 // Get a single PersonsBooking
-router.get("/single",   getPersonsBooking);
+router.get("/single",  getPersonsBooking);
 
 //update Status
 router.put('/updateStatus/:id',  statusUpdate)

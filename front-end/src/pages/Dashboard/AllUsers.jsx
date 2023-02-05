@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { useAllUsersQuery, useDeleteUserMutation, useMakeAdminMutation } from '../../features/user/userApi';
 import Loading from '../Shared/Loading';
 import { toast } from "react-toastify";
+import { useSelector } from 'react-redux';
 
 const AllUsers = () => { 
 const [adminError, setAdminError] = useState('')
-
+  const {email} = useSelector(state => state.user)
   const {data, isLoading, isError, error, refetch} = useAllUsersQuery()
   const [deleteUser] = useDeleteUserMutation()
   const [makeAdmin, {}] = useMakeAdminMutation()
@@ -83,7 +84,7 @@ const [adminError, setAdminError] = useState('')
                             <td>{u.email}</td>
                             <td>{u.role}</td>
                             <td>{ u.role !== 'admin' && <button className='btn btn-primary btn-xs py-1 px-1 ' onClick={()=> handleMakeAdmin(u._id)}>Make Admin</button>}</td>
-                            <td><button onClick={()=>handleDeleteUser(u._id)} className="bg-red-500 btn-xs hover:bg-red-700 text-white py-1 px-1 rounded-full">Delete</button></td>
+                            <td>{u.email !== email && <button onClick={()=>handleDeleteUser(u._id)} className="bg-red-500 btn-xs hover:bg-red-700 text-white py-1 px-1 rounded-full">Delete</button>}</td>
                       </tr>
               )}
               </tbody>

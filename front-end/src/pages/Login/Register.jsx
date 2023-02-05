@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useSignupMutation } from "../../features/user/userApi";
 
+
 const Register = () => {
   const [signup, { data, isLoading, error: responseError }] = useSignupMutation();
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,9 @@ useEffect(()=>{
         displayName: data.name,
       })
         .then(() => {
+          toast.success(`User Successfully Registered, `, {
+            position: "bottom-left",
+          });
           console.log("profile Updated");
         })
         .catch((err) => console.log(err));

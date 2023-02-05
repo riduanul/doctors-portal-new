@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useGetSingleBookingQuery } from "../../features/booking/bookingApiSlice";
 import Loading from "../Shared/Loading";
 
-
 const MyAppointments = () => {
   const { email } = useSelector((state) => state.user);
 

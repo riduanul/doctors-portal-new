@@ -5,11 +5,11 @@ const jwt = require("jsonwebtoken");
 //SignUp User
 const signup = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    // const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
       username: req.body.username,
       email: req.body.email,
-      password: hashedPassword,
+      password: req.body.password,
     });
     user.save();
      // Generate Token
@@ -38,14 +38,18 @@ const signup = async (req, res) => {
 // Login User
 
 const loginUser = async (req, res) => {
+  const {email, password} = req.body;
+
   try {
     const user = await User.find({ email: req.body.email });
-
+  
     if (user) {
+      
       const isValidPassword = await bcrypt.compare(
         req.body.password,
         user[0].password
       );
+      
       if (isValidPassword) {
         // Generate Token
         const token = jwt.sign(
@@ -76,8 +80,8 @@ const loginUser = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(401).json({
-      error: "Authentication Failed!, User Not Found!",
+    res.status(500).json({
+      error: "Server Error, Please try again later!",
     });
   }
 };

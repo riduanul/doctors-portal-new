@@ -1,15 +1,16 @@
 import React, {useState} from "react";
-import { useGetBookingsQuery,useStatusUpdateMutation } from "../../features/booking/bookingApiSlice";
+import { useDeleteBookingMutation, useGetBookingsQuery,useStatusUpdateMutation } from "../../features/booking/bookingApiSlice";
 import Loading from "../Shared/Loading";
 import Select from 'react-select';
+import { toast } from "react-toastify";
 
 const AllAppointments = () => {
   
     const { data, isLoading, isError, error, refetch } = useGetBookingsQuery();
     const [status, setStatus] = useState('pending')
-    
+    const [deleteBooking, {data:deletedData}] = useDeleteBookingMutation()
     const [statusUpdate, {}] = useStatusUpdateMutation()
-    
+   
     const  handleStatusChange = (e, id) =>{
       setStatus(e.value)
       statusUpdate(id, status)
@@ -19,6 +20,19 @@ const AllAppointments = () => {
         
       })
       
+    }
+
+    const handleDelete =(id)=> {
+
+      deleteBooking(id)
+      .unwrap()
+      .then(data => {
+        refetch()
+        toast.success(`Booking Deleted Successfully !`, {
+          position: "bottom-left",
+        });
+      })
+      .catch(err => console.log(err))
     }
     const options = [
       {value: 'pending', label: "Pending", color:"#FF0000"},
@@ -88,7 +102,7 @@ const AllAppointments = () => {
                  <Select options={options} styles={colorStyles}  onChange={(e)=>handleStatusChange(e, a._id)}></Select>
                  </td>
                 <td>
-                  <button className="btn btn-sm btn-primary">Delete</button>
+                  <button className="btn btn-sm btn-primary" onClick={()=> handleDelete(a._id)}>Delete</button>
                 </td>
               </tr>
             ))}

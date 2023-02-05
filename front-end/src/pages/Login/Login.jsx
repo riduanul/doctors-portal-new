@@ -94,10 +94,15 @@ const Login = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen pt-20 ">
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body text-center space-y-8 border border-primary px-20">
+    <div className="flex  justify-center items-center h-screen pt-20 ">
+      
+      <div className="card bg-base-100 shadow-xl pt-16">
+      
+        <div className="card-body text-center space-y-4 border border-primary px-20">
+        <small className="text-red-500 bg-red-200">Admin email: admin@dportal.com, password: 123456</small>
           <h2 className="text-2xl font-bold text-primary">Login</h2>
+            
+            
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <div className="form-control w-full max-w-xs">
               <label className="label">

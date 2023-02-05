@@ -85,14 +85,9 @@ const getABooking = async(req, res) => {
 
 // Get A Single 's Booking
 const getPersonsBooking = async (req, res) => {
-  const email = req.query.email;
-  console.log(email)
-  // const decodedEmail = req.decoded.email;
-  // if(email !== decodedEmail){
-  //   return res.status(403).json({message: "forbidden access!"})
-  // }
+  const email = req.query.patientEmail;
   const booking = await Booking.find({ patientEmail: email });
-  
+ 
   res.status(200).json({
       booking,
     });
@@ -103,23 +98,12 @@ const getPersonsBooking = async (req, res) => {
 
 // Delete a Booking
 const deleteBooking = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(404).json({
-      message: "Invalid Id",
-    });
-  }
-
-  const booking = await Booking.findOneAndDelete({ _id: id });
-  if (booking) {
+  const id = req.params.id;
+    const filter = {_id : id};
+    const result = await Booking.deleteOne(filter);
     res.status(200).json({
-      memssage: "Successfully Delated!",
-    });
-  } else {
-    res.status(500).json({
-      error: "No such a Booking!",
-    });
-  }
+        result
+    })
 };
 
 // //Stripe Payment

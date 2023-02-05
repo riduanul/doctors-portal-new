@@ -7,7 +7,7 @@ const useAdmin = email => {
     
     useEffect(()=>{
         if(email){
-            fetch(`https://doctors-portal-backend-rose.vercel.app/api/user/admin/${email}`)
+            fetch(`https://doctors-portal-backend-lyart.vercel.app/api/user/admin/${email}`)
             .then(res => res.json())
             .then(data => {
                 

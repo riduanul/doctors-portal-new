@@ -86,6 +86,7 @@ const getABooking = async(req, res) => {
 // Get A Single 's Booking
 const getPersonsBooking = async (req, res) => {
   const email = req.query.patientEmail;
+  console.log(email)
   const booking = await Booking.find({ patientEmail: email });
  
   res.status(200).json({

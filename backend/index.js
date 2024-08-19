@@ -24,7 +24,10 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type')
   next()
 })
-app.use(cors());
+let corsOptions = {
+  origin: ["http://localhost:5173", "https://doctors-portal-889.netlify.app"],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 

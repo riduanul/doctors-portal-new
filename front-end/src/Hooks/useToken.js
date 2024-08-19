@@ -8,7 +8,7 @@ const useToken = (user) => {
     (user) => {
       const email = user?.email;
       if (user) {
-        fetch(`http://localhost:5000/api/user/${email}`)
+        fetch(`https://doctors-portal-backend-one.vercel.app/api/user/${email}`)
             .then(res => res.json())
             .then(data => {
               

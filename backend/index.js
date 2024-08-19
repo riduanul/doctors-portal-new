@@ -7,9 +7,13 @@ const doctorRoute = require("./routes/doctorRoutes");
 const database = require("./database");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
+
+
 //express app
 const app = express();
 dotenv.config();
+
+
 // Database
 database();
 
@@ -20,11 +24,9 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type')
   next()
 })
-
 app.use(cors());
-
-
 app.use(express.json());
+
 
 // routes
 app.get('/', (req, res) => {

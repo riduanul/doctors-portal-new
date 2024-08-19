@@ -23,7 +23,7 @@ const signup = async (req, res) => {
       { expiresIn: "1h" }
     );
     res.status(200).json({
-      message: "Signup was Successfull!",
+      message: "Signup was Successful!",
       access_token: token,
       user: user,
     });
@@ -66,7 +66,7 @@ const loginUser = async (req, res) => {
         res.status(200).json({
           currentUser,
           access_token: token,
-          message: "Login Successfull!",
+          message: "Login Successful!",
         });
       } else {
         res.status(401).json({

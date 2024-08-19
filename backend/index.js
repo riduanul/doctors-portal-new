@@ -27,6 +27,9 @@ app.use(cors());
 app.use(express.json());
 
 // routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the Doctors Portal API');
+});
 app.use("/api/services", servicesRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/user", userRoute);

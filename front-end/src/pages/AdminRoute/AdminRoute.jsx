@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useLocation } from 'react-router-dom'
 import useAdmin from '../../Hooks/useAdmin'
-import Loading from '../shared/Loading'
+import Loading from '../Shared/Loading'
 
 const AdminRoute = ({children}) => {
   const {user} = useSelector(state => state.user)

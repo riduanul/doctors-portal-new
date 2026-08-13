@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, Navigate } from "react-router-dom";
 
-import Loading from "../shared/Loading";
+import Loading from "../Shared/Loading";
 
 const RequireAuth = ({ children }) => {
   const email = useSelector((state) => state.user.email);

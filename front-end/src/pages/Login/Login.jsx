@@ -11,7 +11,7 @@ import { auth } from "../../firebase.config";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../features/services/userSlice";
-import Loading from "../shared/Loading.jsx";
+import Loading from "../Shared/Loading.jsx";
 import { useLoginUserMutation, useUpdateUserMutation } from "../../features/user/userApi";
 
 

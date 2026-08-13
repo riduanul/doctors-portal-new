@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 import useAdmin from "../../Hooks/useAdmin";
-import Loading from "../shared/Loading";
+import Loading from "../Shared/Loading";
 
 const Dashboard = () => {
  

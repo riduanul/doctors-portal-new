@@ -80,7 +80,7 @@ const Login = () => {
         const email = result.user.email
           updateUser({email, currentUser })
           const accessToken = result.user.accessToken
-          localStorage.setItem('accessToken', accessToken)
+          localStorage.setItem('accessToken', JSON.stringify({access_token: accessToken, user: currentUser}))
           navigate(from, {replace: true})
           
       

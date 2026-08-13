@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
   next()
 })
 let corsOptions = {
-  origin: ["http://localhost:5173", "https://doctors-portal-889.netlify.app"],
+  origin: ["http://localhost:5173", "https://doctors-portal-889.netlify.app", "https://doctors-portal-frontend-xi.vercel.app"],
 };
 app.use(cors(corsOptions));
 app.use(express.json());

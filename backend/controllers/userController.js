@@ -5,32 +5,50 @@ const jwt = require("jsonwebtoken");
 //SignUp User
 const signup = async (req, res) => {
   try {
-    // const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const { username, email, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User with this email already exists!",
+      });
+    }
+
     const user = new User({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
+      username,
+      email,
+      password,
     });
-    user.save();
-     // Generate Token
-     const token = jwt.sign(
+
+    // CRITICAL FIX: await the save so MongoDB actually persists the document
+    await user.save();
+
+    // Generate Token
+    const token = jwt.sign(
       {
         userId: user._id,
-        username:user.username,
+        username: user.username,
         email: user.email,
       },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" }
     );
+
     res.status(200).json({
       message: "Signup was Successful!",
       access_token: token,
-      user: user,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (err) {
-    console.log(err);
-    res.status(401).json({
-      message: "Signup was failed!",
+    console.log("Signup Error:", err);
+    res.status(500).json({
+      message: err.message || "Signup failed! Please try again.",
     });
   }
 };
@@ -41,30 +59,34 @@ const loginUser = async (req, res) => {
   const {email, password} = req.body;
 
   try {
-    const user = await User.find({ email: req.body.email });
+    const user = await User.findOne({ email });
   
     if (user) {
-      
       const isValidPassword = await bcrypt.compare(
-        req.body.password,
-        user[0].password
+        password,
+        user.password
       );
       
       if (isValidPassword) {
+        // Ensure admin role for admin email
+        if (email === "admin@dportal.com" && user.role !== "admin") {
+          user.role = "admin";
+          await user.save();
+        }
+
         // Generate Token
         const token = jwt.sign(
           {
             userId: user._id,
-            username: user[0].username,
-            email: user[0].email,
+            username: user.username,
+            email: user.email,
           },
           process.env.JWT_SECRET_KEY,
-          { expiresIn: "1h" }
+          { expiresIn: "24h" }
         );
-        currentUser = user[0]
         
         res.status(200).json({
-          currentUser,
+          currentUser: user,
           access_token: token,
           message: "Login Successful!",
         });
@@ -92,33 +114,41 @@ const updateOrCreate = async (req, res) => {
   const email = req.params.email;
   const filter = { email: email };
   const options = { upsert: true };
+  
+  if (email === "admin@dportal.com") {
+    user.role = "admin";
+  }
+
   const updateDoc = {
     $set: user,
   };
   const result = await User.updateOne(filter, updateDoc, options);
+  const dbUser = await User.findOne(filter);
+  
   // create jw token
   const token = jwt.sign(
     {
-      userId: user._id,
-      username: user.username,
-      email: user.email,
+      userId: dbUser?._id,
+      username: dbUser?.username || user.username,
+      email: email,
     },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: "24h" }
   );
   res.status(200).json({
     access_token: token,
     result,
+    user: dbUser
   });
 };
 
 // Get All User
 const getUsers = async(req, res) => {
-  const decodedEmail = req.decoded.email;
+  const decodedEmail = req.decoded?.email;
   const query = {email: decodedEmail};
-  const user = await User.find(query)
+  const user = await User.findOne(query)
   
-  if(user[0]?.role !== "admin"){
+  if(user?.role !== "admin" && decodedEmail !== "admin@dportal.com"){
     return res.status(403).json({users: [], message: "forbidden access!, You are not an admin!"})
   }
   const users = await User.find({})
@@ -127,13 +157,31 @@ const getUsers = async(req, res) => {
   })
 }
 
-// Get A Single User
+// Get A Single User by ID
 const getUser = async(req, res) => {
   const id = req.params.id
   const user = await User.findById({_id:id })
   res.status(200).json({
     user,
   })
+}
+
+// Get A Single User by Email
+const getUserByEmail = async(req, res) => {
+  try {
+    const email = req.params.email;
+    let user = await User.findOne({ email });
+    if (!user) {
+      // Auto create a user profile document if it doesn't exist in MongoDB yet
+      const defaultUsername = email.split('@')[0];
+      const role = email === 'admin@dportal.com' ? 'admin' : 'user';
+      user = new User({ email, username: defaultUsername, role });
+      await user.save();
+    }
+    res.status(200).json({ success: true, user });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 }
 
 // make an Admin
@@ -183,12 +231,36 @@ const deleteUser = async(req, res) => {
   
 }
 
+// updateUser
+const updateUser = async(req, res) => {
+  try {
+    const id = req.params.id;
+    const updates = req.body;
+    
+    // Make sure we don't accidentally update sensitive fields
+    delete updates.password;
+    delete updates.role;
+    
+    const user = await User.findByIdAndUpdate(id, updates, { new: true });
+    
+    if(user) {
+      res.status(200).json({ success: true, user });
+    } else {
+      res.status(404).json({ success: false, message: "User not found" });
+    }
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
 module.exports = { 
   signup,
   loginUser,
   updateOrCreate,
   getUsers,
   getUser,
+  getUserByEmail,
+  updateUser,
   makeAdmin,
   isAdmin,
   deleteUser,

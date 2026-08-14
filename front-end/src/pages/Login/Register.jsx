@@ -26,7 +26,7 @@ useEffect(()=>{
   if(responseError?.data) {
     setError(responseError.data);
   }
-  if(data?.access_token && data?.newUser){
+  if(data?.access_token && data?.user){
     reset();
     toast.success("Successfully Registered!", {
       position: toast.POSITION.BOTTOM_LEFT,

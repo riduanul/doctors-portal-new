@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { userLoggedIn } from "../features/user/userAuthSlice";
+import { setActiveUser } from "../features/services/userSlice";
 
 export default function useAuthCheck() {
     const dispatch = useDispatch();
@@ -17,6 +18,10 @@ export default function useAuthCheck() {
                     dispatch(userLoggedIn({
                         access_token: auth.access_token,
                         user: auth.user,
+                    }));
+                    dispatch(setActiveUser({
+                        userName: auth.user.username || auth.user.displayName || "User",
+                        email: auth.user.email
                     }));
                 }
             } catch (error) {

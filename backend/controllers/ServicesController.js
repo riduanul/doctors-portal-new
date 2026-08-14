@@ -11,9 +11,22 @@ const getServices = async (req, res) => {
 };
 //Special Appointment Options
 const appointmentSpeciality = async(req, res)=> {
-  const query = {}
-  const result = await Services.find(query).select('name').skip({id:0});
-  res.status(200).json({result})
+  try {
+    let result = await Services.find({}).select('name _id');
+    if (!result || result.length === 0) {
+      result = [
+        { name: "Teeth Cleaning & Hygiene" },
+        { name: "Cosmetic Dentistry" },
+        { name: "Teeth Whitening" },
+        { name: "Cavity Protection & Fillings" },
+        { name: "Pediatric Dental Care" },
+        { name: "Oral Surgery & Extractions" }
+      ];
+    }
+    res.status(200).json({ result });
+  } catch(err) {
+    res.status(500).json({ message: err.message });
+  }
 }
 
 // Get a single Service
@@ -51,27 +64,105 @@ const createService = async (req, res) => {
 };
 // Get remaining data after booking
 const getAvailableServices = async (req, res) => {
-  const date = req.query.date;
-  const services = await Services.find();
+  try {
+    const date = req.query.date;
+    let services = await Services.find().lean();
 
-  const query = { date: date };
-  //get the booking of that day
-  const bookings = await Booking.find(query);
+    // Auto-seed default services if DB is empty
+    if (!services || services.length === 0) {
+      const defaultServices = [
+        {
+          name: "Teeth Cleaning & Hygiene",
+          price: 49,
+          slots: [
+            "08:00 AM - 08:30 AM",
+            "09:00 AM - 09:30 AM",
+            "10:00 AM - 10:30 AM",
+            "11:00 AM - 11:30 AM",
+            "02:00 PM - 02:30 PM",
+            "03:00 PM - 03:30 PM",
+            "04:00 PM - 04:30 PM",
+            "05:00 PM - 05:30 PM"
+          ]
+        },
+        {
+          name: "Cosmetic Dentistry",
+          price: 120,
+          slots: [
+            "09:00 AM - 09:45 AM",
+            "10:00 AM - 10:45 AM",
+            "11:00 AM - 11:45 AM",
+            "02:00 PM - 02:45 PM",
+            "03:00 PM - 03:45 PM",
+            "04:00 PM - 04:45 PM"
+          ]
+        },
+        {
+          name: "Teeth Whitening",
+          price: 79,
+          slots: [
+            "08:30 AM - 09:15 AM",
+            "10:30 AM - 11:15 AM",
+            "01:30 PM - 02:15 PM",
+            "03:30 PM - 04:15 PM"
+          ]
+        },
+        {
+          name: "Cavity Protection & Fillings",
+          price: 95,
+          slots: [
+            "09:00 AM - 09:30 AM",
+            "10:00 AM - 10:30 AM",
+            "11:30 AM - 12:00 PM",
+            "02:30 PM - 03:00 PM",
+            "04:30 PM - 05:00 PM"
+          ]
+        },
+        {
+          name: "Pediatric Dental Care",
+          price: 65,
+          slots: [
+            "08:00 AM - 08:45 AM",
+            "09:30 AM - 10:15 AM",
+            "11:00 AM - 11:45 AM",
+            "02:00 PM - 02:45 PM",
+            "04:00 PM - 04:45 PM"
+          ]
+        },
+        {
+          name: "Oral Surgery & Extractions",
+          price: 220,
+          slots: [
+            "10:00 AM - 11:00 AM",
+            "01:00 PM - 02:00 PM",
+            "03:00 PM - 04:00 PM"
+          ]
+        }
+      ];
+      await Services.insertMany(defaultServices);
+      services = await Services.find().lean();
+    }
 
-  //find the bookings for that service
-  services.forEach((service) => {
-    const serviceBookings = bookings.filter(
-      (book) => book.treatmentType === service.name
-    );
-    const bookedSlots = serviceBookings.map((book) => book.slot);
-    const availableSlots = service.slots.filter(
-      (slot) => !bookedSlots.includes(slot)
-    );
-    service.slots = availableSlots;
-  });
-  res.status(200).json({
-    services,
-  });
+    const query = { date: date };
+    const bookings = await Booking.find(query);
+
+    services.forEach((service) => {
+      const serviceBookings = bookings.filter(
+        (book) => book.treatmentType === service.name
+      );
+      const bookedSlots = serviceBookings.map((book) => book.slot);
+      const availableSlots = (service.slots || []).filter(
+        (slot) => !bookedSlots.includes(slot)
+      );
+      service.slots = availableSlots;
+    });
+
+    res.status(200).json({
+      services,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 // delete a service
 const deleteService = async (req, res) => {

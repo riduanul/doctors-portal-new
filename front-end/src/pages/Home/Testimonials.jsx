@@ -10,27 +10,27 @@ const Testimonials = () => {
     {
       _id: 1,
       name: "Winson Herry",
-      review: "",
-      location: "california",
+      review: "The online booking process was super smooth, and the dental team made me feel completely relaxed throughout my procedure. Highly recommended!",
+      location: "California",
       img: people1,
     },
     {
       _id: 2,
-      name: "Winson Herry",
-      review: "",
-      location: "california",
+      name: "Sophia Martinez",
+      review: "Doctors Portal helped me find a top-tier specialist within minutes. The doctors are incredibly caring and attentive to detail.",
+      location: "New York",
       img: people2,
     },
     {
       _id: 3,
-      name: "Winson Herry",
-      review: "",
-      location: "california",
+      name: "Emily Watson",
+      review: "Clean clinic, professional environment, and zero waiting time. Truly the best healthcare experience I've had in years!",
+      location: "Texas",
       img: people3,
     },
   ];
   return (
-    <section className="my-20">
+    <section id="reviews" className="my-20 scroll-mt-24">
       <div className="flex justify-between">
         <div>
           <h4 className="text-xl text-primary font-bold ">Testimonials</h4>

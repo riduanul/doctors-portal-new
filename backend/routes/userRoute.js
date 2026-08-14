@@ -5,9 +5,11 @@ const {
   updateOrCreate,
   getUsers,
   getUser,
-makeAdmin,
-isAdmin,
-deleteUser,
+  getUserByEmail,
+  updateUser,
+  makeAdmin,
+  isAdmin,
+  deleteUser,
 } = require("../controllers/userController");
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require('../middlewares/verifyJWT')
@@ -25,8 +27,14 @@ router.post("/:email", updateOrCreate);
 // Get All Users
 router.get("/", verifyJWT, verifyAdmin, getUsers);
 
+// Get a User by Email
+router.get("/email/:email", verifyJWT, getUserByEmail);
+
 // Get a User
-router.get("/:id", getUser);
+router.get("/:id", verifyJWT, getUser);
+
+// Update a User Profile
+router.patch("/:id", verifyJWT, updateUser);
 
 // Get an admin
 router.put("/admin/:id", verifyJWT, verifyAdmin, makeAdmin);

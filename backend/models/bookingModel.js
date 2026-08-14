@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const bookingSchema = new Schema({
   treatmentId: {
-    type: Number,
+    type: String,
   },
   treatmentType: {
     type: String,
@@ -13,8 +13,6 @@ const bookingSchema = new Schema({
   date: {
     type: String,
     required: true,
-    
-  
   },
   slot: {
     type: String,
@@ -31,13 +29,25 @@ const bookingSchema = new Schema({
     trim: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
   },
   status:{
     type: String,
     enum: ["pending", "done", "ongoing"],
     default:"pending"
+  },
+  price: {
+    type: Number,
+    default: 150
+  },
+  paid: {
+    type: Boolean,
+    default: false
+  },
+  transactionId: {
+    type: String,
+    default: ""
   }
  
 });

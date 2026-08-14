@@ -19,7 +19,7 @@ export const bookingApi = apiSlice.injectEndpoints({
       query: (email) => `/booking/single?patientEmail=${email}`,
     }),
     updateBooking: builder.mutation({
-      query: (id, data ) => ({
+      query: ({id, data} ) => ({
         url: `/booking/${id}`,
         method: "PUT",
         body: data,
@@ -32,10 +32,24 @@ export const bookingApi = apiSlice.injectEndpoints({
       }),
     }),
    statusUpdate: builder.mutation({
-    query:( id, status) => ({
+    query:({ id, status }) => ({
     url: `/booking/updateStatus/${id}`,
     method:"PUT",
-    body: status   
+    body: { status }   
+    })
+   }),
+   createPaymentIntent: builder.mutation({
+    query: (body) => ({
+      url: "/payment/create-payment-intent",
+      method: "POST",
+      body,
+    })
+   }),
+   confirmPayment: builder.mutation({
+    query: ({ id, transactionId }) => ({
+      url: `/payment/${id}`,
+      method: "PATCH",
+      body: { transactionId }
     })
    })
   }),
@@ -48,5 +62,7 @@ export const {
   useAddBookingMutation,
   useUpdateBookingMutation,
   useDeleteBookingMutation,
-  useStatusUpdateMutation
+  useStatusUpdateMutation,
+  useCreatePaymentIntentMutation,
+  useConfirmPaymentMutation
 } = bookingApi;

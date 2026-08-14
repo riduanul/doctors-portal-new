@@ -19,8 +19,12 @@ import AllUsers from "./pages/Dashboard/AllUsers";
 import AllDoctors from "./pages/Dashboard/AllDoctors";
 import AddDoctor from "./pages/Dashboard/AddDoctor";
 import AllAppointments from "./pages/Dashboard/AllAppointments";
-
-
+import DoctorProfile from "./pages/Doctor/DoctorProfile";
+import PatientProfile from "./pages/Dashboard/PatientProfile";
+import Payment from "./pages/Dashboard/Payment";
+import TermsOfUse from "./pages/Legal/TermsOfUse";
+import PrivacyPolicy from "./pages/Legal/PrivacyPolicy";
+import CookiePolicy from "./pages/Legal/CookiePolicy";
 
 function App() {
   const authChecked = useAuthCheck() 
@@ -33,11 +37,22 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="about" element={<About />} />
+            <Route path="terms" element={<TermsOfUse />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="cookie" element={<CookiePolicy />} />
             <Route
               path="appointment"
               element={
                 <RequireAuth>
                   <Appointment />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="doctor/:id"
+              element={
+                <RequireAuth>
+                  <DoctorProfile />
                 </RequireAuth>
               }
             />
@@ -51,7 +66,8 @@ function App() {
             >
               <Route index element={<DashboardInfo/>}/>
               <Route path="myAppointments" element={<MyAppointments />} />
-              
+              <Route path="profile" element={<PatientProfile />} />
+              <Route path="payment/:id" element={<Payment />} />
               <Route path="allAppointments" element={<AllAppointments />} />
               <Route path="doctors" element={<AllDoctors />} />
               <Route path="adddoctor" element={<AddDoctor />} />

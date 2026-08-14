@@ -45,7 +45,7 @@ const Login = () => {
       );
       const user = userCredential.user;
      
-        loginUser({email, password})
+      await loginUser({email, password}).unwrap();
            
       dispatch(
         setActiveUser({
@@ -66,27 +66,31 @@ const Login = () => {
   //google Signin
 
   const provider = new GoogleAuthProvider();
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        dispatch(
-          setActiveUser({
-            userName: result.user.displayName,
-            email: result.user.email,
-          })
-        );
-    
-        const currentUser = {username:result.user.displayName, email: result.user.email}
-        const email = result.user.email
-          updateUser({email, currentUser })
-          const accessToken = result.user.accessToken
-          localStorage.setItem('accessToken', JSON.stringify({access_token: accessToken, user: currentUser}))
-          navigate(from, {replace: true})
-          
-      
-      })
-
-      .catch((err) => setError(err));
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      dispatch(
+        setActiveUser({
+          userName: result.user.displayName,
+          email: result.user.email,
+        })
+      );
+  
+      const currentUser = {username:result.user.displayName, email: result.user.email}
+      const email = result.user.email
+      const updateResult = await updateUser({email, currentUser }).unwrap();
+      // Store the backend JWT token (not the Firebase token)
+      if (updateResult?.access_token) {
+        localStorage.setItem('accessToken', JSON.stringify({access_token: updateResult.access_token, user: currentUser}))
+      } else {
+        // Fallback: use Firebase token if backend didn't return one
+        const accessToken = result.user.accessToken
+        localStorage.setItem('accessToken', JSON.stringify({access_token: accessToken, user: currentUser}))
+      }
+      navigate(from, {replace: true})
+    } catch (err) {
+      setError(err);
+    }
   };
 
   if (loading) {

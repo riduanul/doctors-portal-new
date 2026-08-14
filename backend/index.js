@@ -4,6 +4,9 @@ const servicesRoutes = require("./routes/servicesRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const userRoute = require("./routes/userRoute");
 const doctorRoute = require("./routes/doctorRoutes");
+const reviewRoute = require("./routes/reviewRoutes");
+const paymentRoute = require("./routes/paymentRoutes");
+const notificationRoute = require("./routes/notificationRoutes");
 const database = require("./database");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
@@ -30,6 +33,9 @@ app.use("/api/services", servicesRoutes);
 app.use("/api/booking", bookingRoutes);
 app.use("/api/user", userRoute);
 app.use("/api/doctor", doctorRoute);
+app.use("/api/review", reviewRoute);
+app.use("/api/payment", paymentRoute);
+app.use("/api/notification", notificationRoute);
 
 //404 error handler
 app.use((req, res, next) => {

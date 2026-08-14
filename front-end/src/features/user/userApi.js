@@ -12,14 +12,15 @@ export const userApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, {queryFulfilled, dispatch}){
         try{
           const result = await queryFulfilled;
+          // Store with correct keys matching what useAuthCheck reads
           localStorage.setItem("accessToken", JSON.stringify({
-            accesToken: result?.data?.access_token,
-            user:result?.data?.currentUser
+            access_token: result?.data?.access_token,
+            user: result?.data?.user
           }))
 
           dispatch(userLoggedIn({
             access_token: result?.data?.access_token,
-            user:result?.data?.currentUser
+            user: result?.data?.user
           }))
         }catch(err){
           console.log(err)
@@ -36,19 +37,19 @@ export const userApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, {queryFulfilled, dispatch}){
         try{
           const result = await queryFulfilled;
+          // Use consistent keys: access_token and user
           localStorage.setItem("accessToken", JSON.stringify({
-            token: result?.data?.access_token,
-            user:result?.data?.user
+            access_token: result?.data?.access_token,
+            user: result?.data?.currentUser
           }))
           sessionStorage.setItem("accessToken", JSON.stringify({
-            token: result?.data?.access_token,
-            user:result?.data?.user
+            access_token: result?.data?.access_token,
+            user: result?.data?.currentUser
           }))
-          
 
           dispatch(userLoggedIn({
             access_token: result?.data?.access_token,
-            user:result?.data?.currentUser
+            user: result?.data?.currentUser
           }))
         }catch(err){
           console.log(err)
@@ -61,6 +62,29 @@ export const userApi = apiSlice.injectEndpoints({
         method: "POST",
         body: currentUser,
       }),
+    }),
+    getUserById: builder.query({
+      query: (id) => `/user/${id}`
+    }),
+    getUserByEmail: builder.query({
+      query: (email) => `/user/email/${email}`
+    }),
+    updateUserProfile: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/user/${id}`,
+        method: "PATCH",
+        body: body
+      }),
+      async onQueryStarted({ id }, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          // We could potentially update the Redux auth state here 
+          // if we add a userUpdated action, or just rely on refetching.
+          // Since userAuthSlice might not have userUpdated, we just log or ignore.
+        } catch(err) {
+          console.log(err)
+        }
+      }
     }),
     allUsers: builder.query({
       query:() => `/user`
@@ -87,6 +111,9 @@ export const {
   useSignupMutation,
   useLoginUserMutation,
   useUpdateUserMutation,
+  useGetUserByIdQuery,
+  useGetUserByEmailQuery,
+  useUpdateUserProfileMutation,
   useMakeAdminMutation,
   useAllUsersQuery,
   useIsAdminQuery,

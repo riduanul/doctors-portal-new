@@ -19,11 +19,8 @@ const MakeAppointment = () => {
           <h2 className=" text-xl lg:text-3xl font-bold text-white">
             Make An Appointment Today
           </h2>
-          <p className="text-white">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, porro.
-            Molestias accusantium aut quos debitis eum enim modi incidunt eius
-            cupiditate mollitia eaque provident quaerat pariatur illum
-            voluptatum, praesentium nesciunt.
+          <p className="text-white/90 leading-relaxed">
+            Don't delay your health. Schedule your consultation with our experienced physicians in just a few clicks. Select your preferred date, time slot, and treatment specialty today.
           </p>
           <PrimaryButton title="GET APPOINTMENT" />
         </div>

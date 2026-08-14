@@ -13,10 +13,8 @@ const Banner = () => {
           <h1 className="lg:text-5xl font-bold sm:text-xl">
             Your New Smile Starts Here!
           </h1>
-          <p className="py-6">
-            Provident cupiditate voluptatem et in. hello fugiat ut assumenda
-            excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
-            a id nisi.
+          <p className="py-6 text-base-content/80 leading-relaxed">
+            Experience world-class healthcare with top certified medical specialists. Book online appointments instantly, receive personalized treatments, and manage your health seamlessly.
           </p>
           <PrimaryButton title="GET STARTED" />
         </div>

@@ -20,8 +20,31 @@ const userSchema = new Schema({
         type: String,
         enum:["user", "admin"],
         default: "user"
+    },
+    bloodGroup: {
+        type: String,
+        default: ""
+    },
+    age: {
+        type: Number,
+    },
+    phone: {
+        type: String,
+        default: ""
+    },
+    address: {
+        type: String,
+        default: ""
+    },
+    medicalHistory: {
+        type: String,
+        default: ""
+    },
+    photoURL: {
+        type: String,
+        default: ""
     }
-})
+}, { timestamps: true })
 
 userSchema.pre("save", function(next){
     bcrypt.hash(this.password, 10, (err, hash)=> {

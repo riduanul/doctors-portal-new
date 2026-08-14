@@ -12,6 +12,10 @@ const servicesSchema = new Schema({
       required: true,
     },
   ],
+  price: {
+    type: Number,
+    default: 99,
+  },
 });
 
 module.exports = mongoose.model("Services", servicesSchema);

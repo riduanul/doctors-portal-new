@@ -7,8 +7,8 @@ const stripe = require("stripe")(process.env.STRIPE_SK);
 
 // Create a New Booking
 const createBooking = async (req, res) => {
-  const { bookingData } = req.body;
-console.log(bookingData)
+  const data = req.body.bookingData || req.body;
+  
   const {
     treatmentId,
     treatmentType,
@@ -18,7 +18,11 @@ console.log(bookingData)
     patientEmail,
     patientName,
     phoneNumber,
-  } = bookingData;
+  } = data || {};
+
+  if (!treatmentType || !date || !slot || !patientEmail) {
+    return res.status(400).json({ error: "Missing required booking details." });
+  }
 
   const query = {
     treatmentType: treatmentType,
@@ -30,28 +34,29 @@ console.log(bookingData)
     if (exist) {
       return res.status(208).json({
         success: false,
-        message: `${patientName} has alrady an appointment on ${exist.date} at ${exist.slot}`,
+        message: `${patientName || 'Patient'} already has an appointment on ${exist.date} at ${exist.slot}`,
         booking: exist,
       });
     }
 
     const booking = await Booking.create({
-      treatmentId,
+      treatmentId: treatmentId ? String(treatmentId) : "",
       treatmentType,
       date,
       slot,
-      price,
+      price: price || 99,
       patientEmail,
-      patientName,
-      phoneNumber,
+      patientName: patientName || "Patient",
+      phoneNumber: String(phoneNumber || ""),
     });
     res.status(200).json({
       success: true,
       booking,
     });
   } catch (err) {
+    console.log("Create booking error:", err);
     res.status(500).json({
-      error: err.message,
+      error: err.message || "Failed to create booking",
     });
   }
 };
